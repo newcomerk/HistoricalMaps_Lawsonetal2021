@@ -1,0 +1,28 @@
+plot(Sm_M30, breaks=c(1,2,3), col= c("pink","navy"), main = "1960 Savusavu", axes=FALSE)
+plot(Sm_M51, breaks=c(1,2,3), col= c("pink","navy"), main = "2018 Savusavu", axes=FALSE)
+plot(Sm_M24, breaks=c(1,2,3), col= c("pink","navy"), main = "1880 Savusavu", axes=FALSE)
+plot(Sm_M36, breaks=c(1,2,3), col= c("pink","navy"), main = "1876 Savusavu", axes=FALSE)
+
+animation::saveGIF(
+  expr = {
+    plot(Sm_M36, breaks=c(1,2,3), col= c("pink","navy"), main = "1876 Savusavu", axes=FALSE)
+    plot(Sm_M24, breaks=c(1,2,3), col= c("pink","navy"), main = "1880 Savusavu", axes=FALSE)
+    plot(Sm_M30, breaks=c(1,2,3), col= c("pink","navy"), main = "1960 Savusavu", axes=FALSE)
+    plot(Sm_M51, breaks=c(1,2,3), col= c("pink","navy"), main = "2018 Savusavu", axes=FALSE)
+    },
+  movie.name = "explicit_my3.gif"
+)
+
+
+animation::saveGIF(
+  expr = {
+    plot(Sm_M27, breaks=c(1,2,3), col= c("pink","navy"), main = "1840 Suva", axes=FALSE)
+    plot(Sm_M26, breaks=c(1,2,3), col= c("pink","navy"), main = "1875 Suva", axes=FALSE)
+    plot(Sm_M52, breaks=c(1,2,3), col= c("pink","navy"), main = "1898 Suva", axes=FALSE)
+    plot(Sm_M40, breaks=c(1,2,3), col= c("pink","navy"), main = "1914 Suva", axes=FALSE)
+    plot(Sm_M7, breaks=c(1,2,3), col= c("pink","navy"), main = "1934 Suva", axes=FALSE)
+    plot(Sm_M28, breaks=c(1,2,3), col= c("pink","navy"), main = "1945 Suva", axes=FALSE)
+    plot(Sm_M53, breaks=c(1,2,3), col= c("pink","navy"), main = "2019 Suva", axes=FALSE)
+    },
+  movie.name = "explicit_my3.gif",interval=.8
+)
