@@ -1,0 +1,185 @@
+# First, install the tidyr, dplyr, raster, and landscapemetrics packages then load them into R
+library(tidyr)               # Tools for reshaping, rectangling and nesting data
+library(dplyr)               # Tools for manipulating data frames
+library(raster)              # Tools for manipulating raster data, as well as vector data operations.
+library(landscapemetrics)    # Calculate metrics for categorical landscape patterns
+library(raster)
+library(rasterVis)
+library(devtools)
+library(ggpubr)
+library(animation)
+
+# Set working directory
+setwd("C:/Users/newco/OneDrive - Syracuse University/PhD Research/Fiji Maps/GIS Work")
+
+# Load landscape rasters
+
+
+#Suva Small
+Sm_M26 <- raster("Reclass_Coral_M26Test_ClipSmall.tif")
+Sm_M7 <- raster("Reclass_Coral_M7_ClipSmall.tif")
+Sm_M28 <- raster("Reclass_Coral_M28_ClipSmall.tif")
+Sm_M5 <- raster("Reclass_Coral_M5_ClipSmall.tif")
+Sm_M54 <- raster("Reclass_Coral_M54_ClipSmall.tif")
+Sm_M52 <- raster("Reclass_Coral_M52_ClipSmall.tif")
+Sm_M27 <- raster("Reclass_Coral_M27_ClipSmall.tif")
+Sm_M40 <- raster("Reclass_Coral_M40_ClipSmall.tif")
+Sm_M53 <- raster("Reclass_Coral_M53r_ClipSmall.tif")
+
+
+#savusavu
+Sm_M30 <- raster("Reclass_Coral_M33and32_ClipSmallest.tif")
+Sm_M51 <- raster("Reclass_Coral_M51_ClipSmallest.tif")
+Sm_M24 <- raster("Reclass_Coral_M24_ClipSmallest.tif")
+Sm_M36 <- raster("Reclass_Coral_M36_Clip.tif")
+
+
+
+#savusavu very small
+VSm_M30 <- raster("Reclass_Coral_M33and32_ClipClip.tif")
+VSm_M51 <- raster("Reclass_Coral_M51_ClipClip.tif")
+VSm_M24 <- raster("Reclass_Coral_M24_ClipClip.tif")
+VSm_M36 <- raster("Reclass_Coral_M36_ClipClip.tif")
+
+# Explore the properties of each grid
+# Plot
+
+SmallSuva<- c(Sm_M26, Sm_M7, Sm_M28, Sm_M27, Sm_M53, Sm_M40, Sm_M5, Sm_M52, Sm_M54)
+
+SmallSuvaData<-NULL
+
+for (i in SmallSuva) {
+  a <- bind_rows(
+  # AREA
+  lsm_p_area(i, directions=8), # We use the directions argument to specify number of neighbors. The default is 8.    
+  # PERIM
+  lsm_p_perim(i),    
+  # PARA
+  lsm_p_para(i),     
+  # SHAPE
+  lsm_p_shape(i),    
+  # FRAC
+  lsm_p_frac(i),     
+  # CONTIG
+  lsm_p_contig(i),   
+  # CORE
+  lsm_p_core(i, edge_depth=1) # We can specify the edge depth in cells. The default is set to 1 cell (= 28.5 m).      
+)
+
+a$Name<- paste(i@file@name)
+  
+  b <- bind_rows(
+  lsm_c_ca(i),         # CA/TA - total (class) area
+  lsm_c_pland(i),      # PLAND - percentage of landscape
+  lsm_c_ed(i),         # ED - edge density  
+  lsm_c_shape_mn(i),   # SHAPE_MN - shape index (mean)
+  lsm_c_frac_mn(i),    # FRAC_MN - fractal dimension index (mean)
+  lsm_c_core_mn(i),    # CORE_MN - core area (mean)
+  lsm_c_np(i),         # NP - number of patches
+  lsm_c_pd(i)          # PD - patch density
+)
+
+  b$Name<- paste(i@file@name)
+  
+SmallSuvaData <- rbind(SmallSuvaData, a, b)
+
+
+}
+
+write.csv(SmallSuvaData,"SmallSuvaData1Feb21.csv")
+
+###########Savusavu
+
+SmallSavusavu<-c(Sm_M30, Sm_M51, Sm_M24, Sm_M36)
+
+
+SmallSavusavuData<-NULL
+
+for (i in SmallSavusavu) {
+  a <- bind_rows(
+  # AREA
+  lsm_p_area(i, directions=8), # We use the directions argument to specify number of neighbors. The default is 8.    
+  # PERIM
+  lsm_p_perim(i),    
+  # PARA
+  lsm_p_para(i),     
+  # SHAPE
+  lsm_p_shape(i),    
+  # FRAC
+  lsm_p_frac(i),     
+  # CONTIG
+  lsm_p_contig(i),   
+  # CORE
+  lsm_p_core(i, edge_depth=1) # We can specify the edge depth in cells. The default is set to 1 cell (= 28.5 m).      
+)
+
+a$Name<- paste(i@file@name)
+  
+  b <- bind_rows(
+  lsm_c_ca(i),         # CA/TA - total (class) area
+  lsm_c_pland(i),      # PLAND - percentage of landscape
+  lsm_c_ed(i),         # ED - edge density  
+  lsm_c_shape_mn(i),   # SHAPE_MN - shape index (mean)
+  lsm_c_frac_mn(i),    # FRAC_MN - fractal dimension index (mean)
+  lsm_c_core_mn(i),    # CORE_MN - core area (mean)
+  lsm_c_np(i),         # NP - number of patches
+  lsm_c_pd(i)          # PD - patch density
+)
+
+  b$Name<- paste(i@file@name)
+  
+SmallSavusavuData <- rbind(SmallSavusavuData, a, b)
+
+
+}
+
+write.csv(SmallSavusavuData,"SmallSavusavuData1Feb21.csv")
+
+###########Very small Savusavu
+
+VSmallSavusavu<-c(VSm_M30, VSm_M51, VSm_M24, VSm_M36)
+
+
+VSmallSavusavuData<-NULL
+
+for (i in VSmallSavusavu) {
+  a <- bind_rows(
+  # AREA
+  lsm_p_area(i, directions=8), # We use the directions argument to specify number of neighbors. The default is 8.    
+  # PERIM
+  lsm_p_perim(i),    
+  # PARA
+  lsm_p_para(i),     
+  # SHAPE
+  lsm_p_shape(i),    
+  # FRAC
+  lsm_p_frac(i),     
+  # CONTIG
+  lsm_p_contig(i),   
+  # CORE
+  lsm_p_core(i, edge_depth=1) # We can specify the edge depth in cells. The default is set to 1 cell (= 28.5 m).      
+)
+
+a$Name<- paste(i@file@name)
+  
+  b <- bind_rows(
+  lsm_c_ca(i),         # CA/TA - total (class) area
+  lsm_c_pland(i),      # PLAND - percentage of landscape
+  lsm_c_ed(i),         # ED - edge density  
+  lsm_c_shape_mn(i),   # SHAPE_MN - shape index (mean)
+  lsm_c_frac_mn(i),    # FRAC_MN - fractal dimension index (mean)
+  lsm_c_core_mn(i),    # CORE_MN - core area (mean)
+  lsm_c_np(i),         # NP - number of patches
+  lsm_c_pd(i)          # PD - patch density
+)
+
+  b$Name<- paste(i@file@name)
+  
+VSmallSavusavuData <- rbind(VSmallSavusavuData, a, b)
+
+
+}
+
+write.csv(VSmallSavusavuData,"VerySmallSavusavuData1Feb21.csv")
+
+
